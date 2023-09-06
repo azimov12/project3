@@ -44,7 +44,7 @@ class CreatePhoneView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)    
 
-class CreateKeyboardView(APIView):
+class CreateHeadphoneView(APIView):
     def post(self, request):
         user_body = request.data 
         s = HeadphonesSerializer(data = user_body)          
