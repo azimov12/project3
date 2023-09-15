@@ -1,54 +1,48 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Phones, Headphones
-from django.http import JsonResponse
 from .serializers import PhonesSerializer, HeadphonesSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 
 # Create your views here.
 
-class Detail(APIView):
-    def get(self, request, *args, **kwargs):
-        phone = get_object_or_404(Phones, id = kwargs['phone_id'])
-        res = PhonesSerializer(phone)
-        return Response(res.data)
+class Detail(generics.RetrieveAPIView):
+    queryset = Phones.objects.all()
+    serializer_class = PhonesSerializer 
 
-class All(APIView):    
-    def get(self, request):
-        phone = Phones.objects.all()
-        result = PhonesSerializer(phone, many=True)
-        
-        return Response(result.data)   
+class All(generics.ListAPIView):
+    queryset = Phones.objects.all()
+    serializer_class = PhonesSerializer 
 
-
-class Detail2(APIView):
-    def get(self, request, *args, **kwargs):
-        headphone = get_object_or_404(Headphones, id = kwargs['headphone_id'])
-        result = HeadphonesSerializer(headphone)
-
-        return Response(result.data)
+class Detail2(generics.RetrieveAPIView):
+    queryset = Headphones.objects.all()
+    serializer_class = HeadphonesSerializer
 
 class All2(APIView):
-    def get(self, request):
-        h = Headphones.objects.all()
-        r = HeadphonesSerializer(h, many=True)
+    queryset = Headphones.objects.all()
+    serializer_class = HeadphonesSerializer  
 
-        return Response(r.data)   
+class CreatePhoneView(generics.CreateAPIView):
+    queryset = Phones.objects.all()
+    serializer_class = PhonesSerializer  
 
-class CreatePhoneView(APIView):
-    def post(self, request):
-        user_body = request.data 
-        serializer = PhonesSerializer(data = user_body)          
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)    
+class CreateHeadphoneView(generics.CreateAPIView):
+    queryset = Headphones.objects.all()
+    serializer_class = HeadphonesSerializer 
 
-class CreateHeadphoneView(APIView):
-    def post(self, request):
-        user_body = request.data 
-        s = HeadphonesSerializer(data = user_body)          
-        if s.is_valid():
-            s.save()
-            return Response(s.data)
-        return Response(s.errors)    
+class DeletePhone(generics.DestroyAPIView):   
+    queryset = Phones.objects.all()
+    serializer_class = PhonesSerializer    
+
+class DeleteHeadphone(generics.DestroyAPIView):   
+    queryset = Headphones.objects.all()
+    serializer_class = HeadphonesSerializer    
+
+class UpdatePhone(generics.UpdateAPIView):   
+    queryset = Phones.objects.all()
+    serializer_class = PhonesSerializer    
+
+class UpdateHeadphone(generics.UpdateAPIView):   
+    queryset = Headphones.objects.all()
+    serializer_class = HeadphonesSerializer     
